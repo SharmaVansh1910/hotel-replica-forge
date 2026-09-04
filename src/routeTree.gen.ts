@@ -10,7 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as HotelsRouteImport } from './routes/hotels'
+import { Route as PgRouteImport } from './routes/pg'
+import { Route as ReserveRouteImport } from './routes/reserve'
 import { Route as BookSlugRouteImport } from './routes/book.$slug'
 import { Route as HotelsSlugRouteImport } from './routes/hotels.$slug'
 
@@ -19,9 +23,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HotelsRoute = HotelsRouteImport.update({
   id: '/hotels',
   path: '/hotels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PgRoute = PgRouteImport.update({
+  id: '/pg',
+  path: '/pg',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReserveRoute = ReserveRouteImport.update({
+  id: '/reserve',
+  path: '/reserve',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookSlugRoute = BookSlugRouteImport.update({
@@ -37,34 +61,75 @@ const HotelsSlugRoute = HotelsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
   '/hotels': typeof HotelsRouteWithChildren
+  '/pg': typeof PgRoute
+  '/reserve': typeof ReserveRoute
   '/book/$slug': typeof BookSlugRoute
   '/hotels/$slug': typeof HotelsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
   '/hotels': typeof HotelsRouteWithChildren
+  '/pg': typeof PgRoute
+  '/reserve': typeof ReserveRoute
   '/book/$slug': typeof BookSlugRoute
   '/hotels/$slug': typeof HotelsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
   '/hotels': typeof HotelsRouteWithChildren
+  '/pg': typeof PgRoute
+  '/reserve': typeof ReserveRoute
   '/book/$slug': typeof BookSlugRoute
   '/hotels/$slug': typeof HotelsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/hotels' | '/book/$slug' | '/hotels/$slug'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/events'
+    | '/hotels'
+    | '/pg'
+    | '/reserve'
+    | '/book/$slug'
+    | '/hotels/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/hotels' | '/book/$slug' | '/hotels/$slug'
-  id: '__root__' | '/' | '/hotels' | '/book/$slug' | '/hotels/$slug'
+  to:
+    | '/'
+    | '/contact'
+    | '/events'
+    | '/hotels'
+    | '/pg'
+    | '/reserve'
+    | '/book/$slug'
+    | '/hotels/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/events'
+    | '/hotels'
+    | '/pg'
+    | '/reserve'
+    | '/book/$slug'
+    | '/hotels/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  EventsRoute: typeof EventsRoute
   HotelsRoute: typeof HotelsRouteWithChildren
+  PgRoute: typeof PgRoute
+  ReserveRoute: typeof ReserveRoute
   BookSlugRoute: typeof BookSlugRoute
 }
 
@@ -77,11 +142,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hotels': {
       id: '/hotels'
       path: '/hotels'
       fullPath: '/hotels'
       preLoaderRoute: typeof HotelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pg': {
+      id: '/pg'
+      path: '/pg'
+      fullPath: '/pg'
+      preLoaderRoute: typeof PgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reserve': {
+      id: '/reserve'
+      path: '/reserve'
+      fullPath: '/reserve'
+      preLoaderRoute: typeof ReserveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book/$slug': {
@@ -114,7 +207,11 @@ const HotelsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  EventsRoute: EventsRoute,
   HotelsRoute: HotelsRouteWithChildren,
+  PgRoute: PgRoute,
+  ReserveRoute: ReserveRoute,
   BookSlugRoute: BookSlugRoute,
 }
 export const routeTree = rootRouteImport
