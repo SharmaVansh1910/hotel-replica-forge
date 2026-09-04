@@ -15,9 +15,9 @@ function navigationFromProperties(properties: Property[]) {
   if (!properties.length) return fallbackNavigation;
   return Object.entries(
     properties.reduce<Record<string, Record<string, string[]>>>((states, property) => {
-      states[property.state] ??= {};
-      states[property.state][property.city] ??= [];
-      states[property.state][property.city].push(property.name);
+      const state = states[property.state] ?? (states[property.state] = {});
+      const city = state[property.city] ?? (state[property.city] = []);
+      city.push(property.name);
       return states;
     }, {}),
   ).map(([state, cities]) => ({
