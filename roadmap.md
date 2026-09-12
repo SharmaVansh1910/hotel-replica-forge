@@ -1,0 +1,3 @@
+- [ ] Add sign-in and account dashboard
+- [ ] Complete hotel navigation and detail sections
+- [ ] Verify public booking flows and mobile preview
