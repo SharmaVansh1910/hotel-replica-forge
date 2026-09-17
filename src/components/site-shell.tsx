@@ -1,23 +1,27 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, Menu, X, ArrowUpRight, Instagram, Phone, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProperties, type Property } from "@/lib/data";
 import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
-const fallbackNavigation = [
-  { state: "Uttarakhand", cities: [{ city: "Rishikesh", properties: ["Qcent Woods Resort & Spa", "Pacific Inn 360 Degree Resort"] }] },
-  { state: "Haryana", cities: [{ city: "Gurugram", properties: ["Qcent Hotel Gurugram"] }] },
-  { state: "Himachal Pradesh", cities: [{ city: "Shimla", properties: ["Qcent Shimla"] }] },
+type NavigationProperty = Pick<Property, "id" | "slug" | "name">;
+type Navigation = Array<{ state: string; cities: Array<{ city: string; properties: NavigationProperty[] }> }>;
+
+const fallbackNavigation: Navigation = [
+  { state: "Uttarakhand", cities: [{ city: "Rishikesh", properties: [{ id: "woods", slug: "qcent-woods-resort-spa", name: "Qcent Woods Resort & Spa" }, { id: "pacific", slug: "pacific-inn-360-degree-resort", name: "Pacific Inn 360 Degree Resort" }] }] },
+  { state: "Haryana", cities: [{ city: "Gurugram", properties: [{ id: "gurugram", slug: "qcent-hotel-gurugram", name: "Qcent Hotel Gurugram" }] }] },
+  { state: "Himachal Pradesh", cities: [{ city: "Shimla", properties: [{ id: "shimla", slug: "qcent-shimla", name: "Qcent Shimla" }] }] },
 ];
 
 function navigationFromProperties(properties: Property[]) {
   if (!properties.length) return fallbackNavigation;
   return Object.entries(
-    properties.reduce<Record<string, Record<string, string[]>>>((states, property) => {
+    properties.reduce<Record<string, Record<string, NavigationProperty[]>>>((states, property) => {
       const state = states[property.state] ?? (states[property.state] = {});
       const city = state[property.city] ?? (state[property.city] = []);
-      city.push(property);
+      city.push({ id: property.id, slug: property.slug, name: property.name });
       return states;
     }, {}),
   ).map(([state, cities]) => ({
@@ -29,8 +33,17 @@ function navigationFromProperties(properties: Property[]) {
 export function SiteShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hotelsOpen, setHotelsOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const { data: properties = [] } = useQuery({ queryKey: ["properties", "navigation"], queryFn: getProperties, staleTime: 60_000 });
   const navigation = navigationFromProperties(properties);
+
+  useEffect(() => {
+    void supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") setSignedIn(Boolean(session));
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -42,16 +55,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium lg:flex">
             <Link to="/hotels" className="transition-colors hover:text-accent">Our Hotels</Link>
-            <button type="button" className="inline-flex items-center gap-1 transition-colors hover:text-accent" onClick={() => setHotelsOpen((open) => !open)}>
+            <Button type="button" variant="ghost" size="sm" className="gap-1" onClick={() => setHotelsOpen((open) => !open)}>
               Explore <ChevronDown className={`h-4 w-4 transition-transform ${hotelsOpen ? "rotate-180" : ""}`} />
-            </button>
+            </Button>
             <Link to="/events" className="transition-colors hover:text-accent">Events</Link>
             <Link to="/pg" className="transition-colors hover:text-accent">Q PG & Co-Living</Link>
             <Link to="/contact" className="transition-colors hover:text-accent">Contact</Link>
           </nav>
           <div className="hidden items-center gap-3 lg:flex">
             <a href="tel:+918800699155" aria-label="Call Qcent Hotels" className="grid h-10 w-10 place-items-center rounded-full border border-border hover:bg-secondary"><Phone className="h-4 w-4" /></a>
-            <Button asChild variant="ghost" size="sm"><Link to="/auth"><UserRound /> Sign in</Link></Button>
+            <Button asChild variant="ghost" size="sm"><Link to={signedIn ? "/dashboard" : "/auth"}><UserRound /> {signedIn ? "My stays" : "Sign in"}</Link></Button>
             <Button asChild size="sm"><Link to="/reserve">Reserve now <ArrowUpRight /></Link></Button>
           </div>
           <Button variant="ghost" size="icon" className="lg:hidden" aria-label={mobileOpen ? "Close menu" : "Open menu"} onClick={() => setMobileOpen((open) => !open)}>
@@ -59,7 +72,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Button>
         </div>
         {hotelsOpen && <DesktopMenu navigation={navigation} />}
-        {mobileOpen && <MobileMenu navigation={navigation} onClose={() => setMobileOpen(false)} />}
+        {mobileOpen && <MobileMenu navigation={navigation} signedIn={signedIn} onClose={() => setMobileOpen(false)} />}
       </header>
       <main>{children}</main>
       <footer className="border-t border-border bg-primary text-primary-foreground">
@@ -74,11 +87,11 @@ export function SiteShell({ children }: { children: ReactNode }) {
   );
 }
 
-function DesktopMenu({ navigation }: { navigation: ReturnType<typeof navigationFromProperties> }) {
+function DesktopMenu({ navigation }: { navigation: Navigation }) {
   return <div className="absolute left-0 right-0 top-[4.5rem] border-b border-border bg-card shadow-lg"><div className="mx-auto grid max-w-7xl grid-cols-3 gap-10 px-8 py-8">{navigation.map((item) => <div key={item.state}><p className="mb-4 font-display text-xl">{item.state}</p>{item.cities.map((city) => <div key={city.city} className="mb-4"><p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p><div className="grid gap-2 text-sm">{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} className="hover:text-accent">{property.name} <ArrowUpRight className="ml-1 inline h-3 w-3" /></Link>)}</div></div>)}</div>)}</div></div>;
 }
 
-function MobileMenu({ navigation, onClose }: { navigation: ReturnType<typeof navigationFromProperties>; onClose: () => void }) {
+function MobileMenu({ navigation, signedIn, onClose }: { navigation: Navigation; signedIn: boolean; onClose: () => void }) {
   const [openState, setOpenState] = useState<string | null>(null);
-  return <div className="border-t border-border bg-card px-5 py-5 lg:hidden"><div className="grid gap-1"><Link to="/hotels" onClick={onClose} className="border-b border-border py-3 font-medium">Our Hotels</Link>{navigation.map((item) => <div key={item.state} className="border-b border-border"><Button type="button" variant="ghost" className="h-auto w-full justify-between rounded-none px-0 py-3 font-medium" onClick={() => setOpenState(openState === item.state ? null : item.state)}>{item.state}<ChevronDown className={`h-4 w-4 transition-transform ${openState === item.state ? "rotate-180" : ""}`} /></Button>{openState === item.state && <div className="grid gap-4 pb-4 pl-3">{item.cities.map((city) => <div key={city.city}><p className="mb-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p>{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="block py-1 text-sm">{property.name}</Link>)}</div>)}</div>}</div>)}<Link to="/events" onClick={onClose} className="border-b border-border py-3 font-medium">Events</Link><Link to="/pg" onClick={onClose} className="border-b border-border py-3 font-medium">Q PG & Co-Living</Link><Link to="/contact" onClick={onClose} className="border-b border-border py-3 font-medium">Contact</Link><Button asChild className="mt-4"><Link to="/auth" onClick={onClose}>Sign in <UserRound /></Link></Button><Button asChild variant="outline" className="mt-2"><Link to="/reserve" onClick={onClose}>Reserve now <ArrowUpRight /></Link></Button></div></div>;
+  return <div className="border-t border-border bg-card px-5 py-5 lg:hidden"><div className="grid gap-1"><Link to="/hotels" onClick={onClose} className="border-b border-border py-3 font-medium">Our Hotels</Link>{navigation.map((item) => <div key={item.state} className="border-b border-border"><Button type="button" variant="ghost" className="h-auto w-full justify-between rounded-none px-0 py-3 font-medium" onClick={() => setOpenState(openState === item.state ? null : item.state)}>{item.state}<ChevronDown className={`h-4 w-4 transition-transform ${openState === item.state ? "rotate-180" : ""}`} /></Button>{openState === item.state && <div className="grid gap-4 pb-4 pl-3">{item.cities.map((city) => <div key={city.city}><p className="mb-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p>{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="block py-1 text-sm">{property.name}</Link>)}</div>)}</div>}</div>)}<Link to="/events" onClick={onClose} className="border-b border-border py-3 font-medium">Events</Link><Link to="/pg" onClick={onClose} className="border-b border-border py-3 font-medium">Q PG & Co-Living</Link><Link to="/contact" onClick={onClose} className="border-b border-border py-3 font-medium">Contact</Link><Button asChild className="mt-4"><Link to={signedIn ? "/dashboard" : "/auth"} onClick={onClose}>{signedIn ? "My stays" : "Sign in"} <UserRound /></Link></Button><Button asChild variant="outline" className="mt-2"><Link to="/reserve" onClick={onClose}>Reserve now <ArrowUpRight /></Link></Button></div></div>;
 }

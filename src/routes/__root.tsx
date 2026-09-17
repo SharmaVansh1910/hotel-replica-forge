@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteShell } from "../components/site-shell";
+import { Toaster } from "../components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -120,10 +122,28 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+        <AuthRefresh />
       <SiteShell>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </SiteShell>
+        <Toaster position="top-right" />
     </QueryClientProvider>
   );
+}
+
+function AuthRefresh() {
+  const router = useRouter();
+  const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      router.invalidate();
+      if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
+    });
+    return () => listener.subscription.unsubscribe();
+  }, [queryClient, router]);
+
+  return null;
 }

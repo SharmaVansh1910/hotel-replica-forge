@@ -7,7 +7,7 @@ import { HotelCard } from "@/components/hotel-card";
 import { getProperties } from "@/lib/data";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Qcent Hotels | Stays with a story" }, { name: "description", content: "Thoughtful hotels and forest retreats across India, made for slow mornings and good stories." }, { property: "og:title", content: "Qcent Hotels | Stays with a story" }, { property: "og:description", content: "Thoughtful hotels and forest retreats across India, made for slow mornings and good stories." }, { property: "og:image", content: "https://qcenthotels.com/wp-content/uploads/2024/04/wood-resort1.png" }, { name: "twitter:image", content: "https://qcenthotels.com/wp-content/uploads/2024/04/wood-resort1.png" }] }),
+  head: () => ({ meta: [{ title: "Qcent Hotels | Stays with a story" }, { name: "description", content: "Thoughtful hotels and forest retreats across India, made for slow mornings and good stories." }, { property: "og:title", content: "Qcent Hotels | Stays with a story" }, { property: "og:description", content: "Thoughtful hotels and forest retreats across India, made for slow mornings and good stories." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:image", content: "https://qcenthotels.com/wp-content/uploads/2024/04/wood-resort1.png" }, { name: "twitter:image", content: "https://qcenthotels.com/wp-content/uploads/2024/04/wood-resort1.png" }] }),
   component: Home,
 });
 
