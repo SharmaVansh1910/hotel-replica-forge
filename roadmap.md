@@ -1,3 +1,3 @@
-- [ ] Add sign-in and account dashboard
-- [ ] Complete hotel navigation and detail sections
-- [ ] Verify public booking flows and mobile preview
+- [x] Add sign-in and account dashboard
+- [x] Complete hotel navigation and detail sections
+- [x] Verify public booking flows and mobile preview

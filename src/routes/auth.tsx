@@ -11,6 +11,8 @@ export const Route = createFileRoute("/auth")({
     { name: "description", content: "Sign in to manage your Qcent Hotels stays and reservations." },
     { property: "og:title", content: "Sign in | Qcent Hotels" },
     { property: "og:description", content: "Manage your Qcent Hotels stays and reservations." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
   ] }),
   component: AuthPage,
 });

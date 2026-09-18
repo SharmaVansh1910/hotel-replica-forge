@@ -4,7 +4,7 @@ import { HotelCard } from "@/components/hotel-card";
 import { getProperties } from "@/lib/data";
 
 export const Route = createFileRoute("/hotels")({
-  head: () => ({ meta: [{ title: "Our Hotels | Qcent Hotels" }, { name: "description", content: "Find your next Qcent stay across India's most memorable places." }, { property: "og:title", content: "Our Hotels | Qcent Hotels" }, { property: "og:description", content: "Find your next Qcent stay across India's most memorable places." }] }),
+  head: () => ({ meta: [{ title: "Our Hotels | Qcent Hotels" }, { name: "description", content: "Find your next Qcent stay across India's most memorable places." }, { property: "og:title", content: "Our Hotels | Qcent Hotels" }, { property: "og:description", content: "Find your next Qcent stay across India's most memorable places." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: HotelsPage,
 });
 
