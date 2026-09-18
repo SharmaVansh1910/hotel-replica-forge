@@ -10,6 +10,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
     { name: "description", content: "Manage your Qcent Hotels reservations and account details." },
     { property: "og:title", content: "My stays | Qcent Hotels" },
     { property: "og:description", content: "Manage your Qcent Hotels reservations and account details." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
   ] }),
   component: DashboardPage,
 });
