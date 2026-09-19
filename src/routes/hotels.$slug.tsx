@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { asRecords, asStrings, getProperty, getRestaurants, getReviews, getRooms } from "@/lib/data";
 
 export const Route = createFileRoute("/hotels/$slug")({
-  head: () => ({ meta: [{ title: "Hotel details | Qcent Hotels" }, { name: "description", content: "Explore your next Qcent stay, from rooms and dining to the details that make it yours." }, { property: "og:title", content: "Hotel details | Qcent Hotels" }, { property: "og:description", content: "Explore your next Qcent stay with Qcent Hotels." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
+  head: () => ({ meta: [{ title: "Hotel details | Pride Vacations" }, { name: "description", content: "Explore your next Pride Vacations stay, from rooms and dining to the details that make it yours." }, { property: "og:title", content: "Hotel details | Pride Vacations" }, { property: "og:description", content: "Explore your next Pride Vacations stay with Pride Vacations." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: HotelDetails,
 });
 

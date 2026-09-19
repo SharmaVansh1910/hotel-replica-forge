@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getProperty, getRooms, submitReservation, asStrings } from "@/lib/data";
 import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/book/$slug")({ head: () => ({ meta: [{ title: "Book your stay | Qcent Hotels" }, { name: "description", content: "Request your Qcent hotel stay." }, { property: "og:title", content: "Book your stay | Qcent Hotels" }, { property: "og:description", content: "Request your Qcent hotel stay." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: BookingPage });
+export const Route = createFileRoute("/book/$slug")({ head: () => ({ meta: [{ title: "Book your stay | Pride Vacations" }, { name: "description", content: "Request your Pride Vacations hotel stay." }, { property: "og:title", content: "Book your stay | Pride Vacations" }, { property: "og:description", content: "Request your Pride Vacations hotel stay." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: BookingPage });
 
 function BookingPage() {
   const { slug } = Route.useParams();
