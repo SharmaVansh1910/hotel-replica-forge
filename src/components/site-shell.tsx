@@ -6,13 +6,13 @@ import { getProperties, type Property } from "@/lib/data";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-type NavigationProperty = Pick<Property, "id" | "slug" | "name">;
+type NavigationProperty = Pick<Property, "id" | "slug">;
 type Navigation = Array<{ state: string; cities: Array<{ city: string; properties: NavigationProperty[] }> }>;
 
 const fallbackNavigation: Navigation = [
-  { state: "Uttarakhand", cities: [{ city: "Rishikesh", properties: [{ id: "woods", slug: "qcent-woods-resort-spa", name: "Qcent Woods Resort & Spa" }, { id: "pacific", slug: "pacific-inn-360-degree-resort", name: "Pacific Inn 360 Degree Resort" }] }] },
-  { state: "Haryana", cities: [{ city: "Gurugram", properties: [{ id: "gurugram", slug: "qcent-hotel-gurugram", name: "Qcent Hotel Gurugram" }] }] },
-  { state: "Himachal Pradesh", cities: [{ city: "Shimla", properties: [{ id: "shimla", slug: "qcent-shimla", name: "Qcent Shimla" }] }] },
+  { state: "Uttarakhand", cities: [{ city: "Rishikesh", properties: [{ id: "woods", slug: "qcent-woods-resort-spa" }, { id: "pacific", slug: "pacific-inn-360-degree-resort" }] }] },
+  { state: "Haryana", cities: [{ city: "Gurugram", properties: [{ id: "gurugram", slug: "qcent-hotel-gurugram" }] }] },
+  { state: "Himachal Pradesh", cities: [{ city: "Shimla", properties: [{ id: "shimla", slug: "qcent-shimla" }] }] },
 ];
 
 function navigationFromProperties(properties: Property[]) {
@@ -21,7 +21,7 @@ function navigationFromProperties(properties: Property[]) {
     properties.reduce<Record<string, Record<string, NavigationProperty[]>>>((states, property) => {
       const state = states[property.state] ?? (states[property.state] = {});
       const city = state[property.city] ?? (state[property.city] = []);
-      city.push({ id: property.id, slug: property.slug, name: property.name });
+      city.push({ id: property.id, slug: property.slug });
       return states;
     }, {}),
   ).map(([state, cities]) => ({
@@ -54,7 +54,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
             <span className="font-display text-2xl font-semibold tracking-tight">Pride Vacations<span className="text-accent">.</span></span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium lg:flex">
-            <Link to="/hotels" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Our Hotels</Link>
+            <Link to="/hotels" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Our destinations</Link>
             <Button type="button" variant="ghost" size="sm" className="gap-1" onClick={() => setHotelsOpen((open) => !open)}>
               Explore <ChevronDown className={`h-4 w-4 transition-transform ${hotelsOpen ? "rotate-180" : ""}`} />
             </Button>
@@ -88,10 +88,10 @@ export function SiteShell({ children }: { children: ReactNode }) {
 }
 
 function DesktopMenu({ navigation, onClose }: { navigation: Navigation; onClose: () => void }) {
-  return <div className="absolute left-0 right-0 top-[4.5rem] border-b border-border bg-card shadow-lg"><div className="mx-auto grid max-w-7xl grid-cols-3 gap-10 px-8 py-8">{navigation.map((item) => <div key={item.state}><p className="mb-4 font-display text-xl">{item.state}</p>{item.cities.map((city) => <div key={city.city} className="mb-4"><p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p><div className="grid gap-2 text-sm">{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="hover:text-accent">{property.name.replace(/Qcent/gi, "Pride Vacations")} <ArrowUpRight className="ml-1 inline h-3 w-3" /></Link>)}</div></div>)}</div>)}</div></div>;
+  return <div className="absolute left-0 right-0 top-[4.5rem] border-b border-border bg-card shadow-lg"><div className="mx-auto grid max-w-7xl grid-cols-3 gap-10 px-8 py-8">{navigation.map((item) => <div key={item.state}><p className="mb-4 font-display text-xl">{item.state}</p>{item.cities.map((city) => <div key={city.city} className="mb-4"><p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p><div className="grid gap-2 text-sm">{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="hover:text-accent">{city.city}{city.properties.length > 1 ? ` · Stay ${city.properties.indexOf(property) + 1}` : ""} <ArrowUpRight className="ml-1 inline h-3 w-3" /></Link>)}</div></div>)}</div>)}</div></div>;
 }
 
 function MobileMenu({ navigation, signedIn, onClose }: { navigation: Navigation; signedIn: boolean; onClose: () => void }) {
   const [openState, setOpenState] = useState<string | null>(null);
-  return <div className="border-t border-border bg-card px-5 py-5 lg:hidden"><div className="grid gap-1"><Link to="/hotels" onClick={onClose} className="border-b border-border py-3 font-medium">Our Hotels</Link>{navigation.map((item) => <div key={item.state} className="border-b border-border"><Button type="button" variant="ghost" className="h-auto w-full justify-between rounded-none px-0 py-3 font-medium" onClick={() => setOpenState(openState === item.state ? null : item.state)}>{item.state}<ChevronDown className={`h-4 w-4 transition-transform ${openState === item.state ? "rotate-180" : ""}`} /></Button>{openState === item.state && <div className="grid gap-4 pb-4 pl-3">{item.cities.map((city) => <div key={city.city}><p className="mb-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p>{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="block py-1 text-sm">{property.name.replace(/Qcent/gi, "Pride Vacations")}</Link>)}</div>)}</div>}</div>)}<Link to="/events" onClick={onClose} className="border-b border-border py-3 font-medium">Events</Link><Link to="/pg" onClick={onClose} className="border-b border-border py-3 font-medium">PV PG & Co-Living</Link><Link to="/contact" onClick={onClose} className="border-b border-border py-3 font-medium">Contact</Link><Button asChild className="mt-4"><Link to={signedIn ? "/dashboard" : "/auth"} onClick={onClose}>{signedIn ? "My stays" : "Sign in"} <UserRound /></Link></Button><Button asChild variant="outline" className="mt-2"><Link to="/reserve" onClick={onClose}>Reserve now <ArrowUpRight /></Link></Button></div></div>;
+  return <div className="border-t border-border bg-card px-5 py-5 lg:hidden"><div className="grid gap-1"><Link to="/hotels" onClick={onClose} className="border-b border-border py-3 font-medium">Our destinations</Link>{navigation.map((item) => <div key={item.state} className="border-b border-border"><Button type="button" variant="ghost" className="h-auto w-full justify-between rounded-none px-0 py-3 font-medium" onClick={() => setOpenState(openState === item.state ? null : item.state)}>{item.state}<ChevronDown className={`h-4 w-4 transition-transform ${openState === item.state ? "rotate-180" : ""}`} /></Button>{openState === item.state && <div className="grid gap-4 pb-4 pl-3">{item.cities.map((city) => <div key={city.city}><p className="mb-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p>{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="block py-1 text-sm">{city.city}{city.properties.length > 1 ? ` · Stay ${city.properties.indexOf(property) + 1}` : ""}</Link>)}</div>)}</div>}</div>)}<Link to="/events" onClick={onClose} className="border-b border-border py-3 font-medium">Events</Link><Link to="/pg" onClick={onClose} className="border-b border-border py-3 font-medium">PV PG & Co-Living</Link><Link to="/contact" onClick={onClose} className="border-b border-border py-3 font-medium">Contact</Link><Button asChild className="mt-4"><Link to={signedIn ? "/dashboard" : "/auth"} onClick={onClose}>{signedIn ? "My stays" : "Sign in"} <UserRound /></Link></Button><Button asChild variant="outline" className="mt-2"><Link to="/reserve" onClick={onClose}>Reserve now <ArrowUpRight /></Link></Button></div></div>;
 }

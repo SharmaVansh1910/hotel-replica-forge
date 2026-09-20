@@ -1,3 +1,4 @@
 - [x] Add sign-in and account dashboard
 - [x] Complete hotel navigation and detail sections
 - [x] Verify public booking flows and mobile preview
+- [x] Replace individual property names with photo-and-location presentation
