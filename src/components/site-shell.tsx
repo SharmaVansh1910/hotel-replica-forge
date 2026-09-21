@@ -33,6 +33,26 @@ function navigationFromProperties(properties: Property[]) {
 export function SiteShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hotelsOpen, setHotelsOpen] = useState(false);
+  useEffect(() => {
+  if (!hotelsOpen) return;
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+
+    if (
+      !target.closest("[data-explore-trigger]") &&
+      !target.closest("[data-explore-menu]")
+    ) {
+      setHotelsOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleOutsideClick);
+
+  return () => {
+    document.removeEventListener("mousedown", handleOutsideClick);
+  };
+ }, [hotelsOpen]);
   const [signedIn, setSignedIn] = useState(false);
   const { data: properties = [] } = useQuery({ queryKey: ["properties", "navigation"], queryFn: getProperties, staleTime: 60_000 });
   const navigation = navigationFromProperties(properties);
@@ -55,9 +75,18 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium lg:flex">
             <Link to="/hotels" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Our destinations</Link>
-            <Button type="button" variant="ghost" size="sm" className="gap-1" onClick={() => setHotelsOpen((open) => !open)}>
-              Explore <ChevronDown className={`h-4 w-4 transition-transform ${hotelsOpen ? "rotate-180" : ""}`} />
-            </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="h-auto gap-1 rounded-none px-0 py-0 font-medium hover:bg-transparent hover:text-accent"
+            onClick={() => setHotelsOpen((open) => !open)}
+            data-explore-trigger
+         >
+            Explore
+            <ChevronDown
+              className={`h-4 w-4 transition-transform ${hotelsOpen ? "rotate-180" : ""}`}
+            />
+          </Button>            
             <Link to="/events" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Events</Link>
             <Link to="/pg" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>HomeStay</Link>
             {/* <Link to="/Farmhouses" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Farmhouses</Link> */}
@@ -88,8 +117,53 @@ export function SiteShell({ children }: { children: ReactNode }) {
   );
 }
 
-function DesktopMenu({ navigation, onClose }: { navigation: Navigation; onClose: () => void }) {
-  return <div className="absolute left-0 right-0 top-[4.5rem] border-b border-border bg-card shadow-lg"><div className="mx-auto grid max-w-7xl grid-cols-3 gap-10 px-8 py-8">{navigation.map((item) => <div key={item.state}><p className="mb-4 font-display text-xl">{item.state}</p>{item.cities.map((city) => <div key={city.city} className="mb-4"><p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{city.city}</p><div className="grid gap-2 text-sm">{city.properties.map((property) => <Link key={property.id} to="/hotels/$slug" params={{ slug: property.slug }} onClick={onClose} className="hover:text-accent">{city.city}{city.properties.length > 1 ? ` · Stay ${city.properties.indexOf(property) + 1}` : ""} <ArrowUpRight className="ml-1 inline h-3 w-3" /></Link>)}</div></div>)}</div>)}</div></div>;
+function DesktopMenu({
+  navigation,
+  onClose,
+}: {
+  navigation: Navigation;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      data-explore-menu
+      className="absolute left-0 right-0 top-[4.5rem] border-b border-border bg-card shadow-lg"
+    >
+      <div className="mx-auto grid max-w-7xl grid-cols-3 gap-10 px-8 py-8">
+        {navigation.map((item) => (
+          <div key={item.state}>
+            <p className="mb-4 font-display text-xl">{item.state}</p>
+
+            {item.cities.map((city) => (
+              <div key={city.city} className="mb-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  {city.city}
+                </p>
+
+                <div className="grid gap-2 text-sm">
+                  {city.properties.map((property) => (
+                    <Link
+                      key={property.id}
+                      to="/hotels/$slug"
+                      params={{ slug: property.slug }}
+                      onClick={onClose}
+                      className="hover:text-accent"
+                    >
+                      {city.city}
+                      {city.properties.length > 1
+                        ? ` · Stay ${city.properties.indexOf(property) + 1}`
+                        : ""}{" "}
+                      <ArrowUpRight className="ml-1 inline h-3 w-3" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function MobileMenu({ navigation, signedIn, onClose }: { navigation: Navigation; signedIn: boolean; onClose: () => void }) {
