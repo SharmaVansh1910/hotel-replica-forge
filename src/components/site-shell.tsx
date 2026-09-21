@@ -59,8 +59,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
               Explore <ChevronDown className={`h-4 w-4 transition-transform ${hotelsOpen ? "rotate-180" : ""}`} />
             </Button>
             <Link to="/events" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Events</Link>
-            <Link to="/HomeStay" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>HomeStay</Link>
-            <Link to="/Farmhouses" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Farmhouses</Link>
+            <Link to="/pg" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>HomeStay</Link>
+            {/* <Link to="/Farmhouses" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Farmhouses</Link> */}
             <Link to="/contact" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Contact</Link>
           </nav>
           <div className="hidden items-center gap-3 lg:flex">
@@ -79,7 +79,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-border bg-primary text-primary-foreground">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.5fr_1fr_1fr] lg:px-8">
           <div><div className="mb-4 font-display text-4xl">Pride Vacations<span className="text-accent">.</span></div><p className="max-w-sm text-sm leading-7 text-primary-foreground/70">Stays with a story. Thoughtful hotels, warm service and places worth taking the long way to.</p></div>
-          <div><p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">Discover</p><div className="grid gap-3 text-sm text-primary-foreground/75"><Link to="/hotels">Our hotels</Link><Link to="/events">Events & weddings</Link><Link to="/HomeStay">HomeStay</Link></div></div>
+          <div><p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">Discover</p><div className="grid gap-3 text-sm text-primary-foreground/75"><Link to="/hotels">Our hotels</Link><Link to="/events">Events & weddings</Link><Link to="/pg">HomeStay</Link></div></div>
           <div><p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">Stay in touch</p><p className="text-sm leading-6 text-primary-foreground/75"><a href="mailto:prideshotels@gmail.com">prideshotels@gmail.com</a><br /><a href="tel:+919818041059">+91 98180 41059</a></p><div className="mt-5 flex gap-3"><a href="https://instagram.com" aria-label="Instagram" className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/20"><Instagram className="h-4 w-4" /></a></div></div>
         </div>
         <div className="mx-auto max-w-7xl border-t border-primary-foreground/15 px-5 py-5 text-xs text-primary-foreground/50 lg:px-8">© 2026 Pride Vacations. Made for slow mornings and good stories.</div>
