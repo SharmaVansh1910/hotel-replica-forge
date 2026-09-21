@@ -59,7 +59,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
               Explore <ChevronDown className={`h-4 w-4 transition-transform ${hotelsOpen ? "rotate-180" : ""}`} />
             </Button>
             <Link to="/events" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Events</Link>
-            <Link to="/pg" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>PV PG & Co-Living</Link>
+            <Link to="/pg" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>HomeStays</Link>
             <Link to="/contact" className="transition-colors hover:text-accent" onClick={() => setHotelsOpen(false)}>Contact</Link>
           </nav>
           <div className="hidden items-center gap-3 lg:flex">
