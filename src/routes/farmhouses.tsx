@@ -70,10 +70,10 @@ function FarmhousesPage() {
                   {place.city}, {place.state}
                 </p>
 
-                <h2 className="mt-2 font-display text-3xl">
-                  {place.name}
-                </h2>
-
+              <h2 className="mt-2 font-display text-3xl">
+                Farmhouse
+              </h2>
+                
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   {place.description ?? place.tagline ?? ""}
                 </p>
