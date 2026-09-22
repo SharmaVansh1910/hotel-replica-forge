@@ -14,8 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as HomestayRouteImport } from './routes/homestay'
 import { Route as HotelsRouteImport } from './routes/hotels'
-import { Route as PgRouteImport } from './routes/pg'
 import { Route as ReserveRouteImport } from './routes/reserve'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as BookSlugRouteImport } from './routes/book.$slug'
@@ -45,14 +45,14 @@ const EventsRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HomestayRoute = HomestayRouteImport.update({
+  id: '/homestay',
+  path: '/homestay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HotelsRoute = HotelsRouteImport.update({
   id: '/hotels',
   path: '/hotels',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PgRoute = PgRouteImport.update({
-  id: '/pg',
-  path: '/pg',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReserveRoute = ReserveRouteImport.update({
@@ -81,8 +81,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
+  '/homestay': typeof HomestayRoute
   '/hotels': typeof HotelsRouteWithChildren
-  '/pg': typeof PgRoute
   '/reserve': typeof ReserveRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/book/$slug': typeof BookSlugRoute
@@ -93,8 +93,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
+  '/homestay': typeof HomestayRoute
   '/hotels': typeof HotelsRouteWithChildren
-  '/pg': typeof PgRoute
   '/reserve': typeof ReserveRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/book/$slug': typeof BookSlugRoute
@@ -107,8 +107,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
+  '/homestay': typeof HomestayRoute
   '/hotels': typeof HotelsRouteWithChildren
-  '/pg': typeof PgRoute
   '/reserve': typeof ReserveRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/book/$slug': typeof BookSlugRoute
@@ -121,8 +121,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/events'
+    | '/homestay'
     | '/hotels'
-    | '/pg'
     | '/reserve'
     | '/dashboard'
     | '/book/$slug'
@@ -133,8 +133,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/events'
+    | '/homestay'
     | '/hotels'
-    | '/pg'
     | '/reserve'
     | '/dashboard'
     | '/book/$slug'
@@ -146,8 +146,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/events'
+    | '/homestay'
     | '/hotels'
-    | '/pg'
     | '/reserve'
     | '/_authenticated/dashboard'
     | '/book/$slug'
@@ -160,8 +160,8 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   EventsRoute: typeof EventsRoute
+  HomestayRoute: typeof HomestayRoute
   HotelsRoute: typeof HotelsRouteWithChildren
-  PgRoute: typeof PgRoute
   ReserveRoute: typeof ReserveRoute
   BookSlugRoute: typeof BookSlugRoute
 }
@@ -203,18 +203,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/homestay': {
+      id: '/homestay'
+      path: '/homestay'
+      fullPath: '/homestay'
+      preLoaderRoute: typeof HomestayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hotels': {
       id: '/hotels'
       path: '/hotels'
       fullPath: '/hotels'
       preLoaderRoute: typeof HotelsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pg': {
-      id: '/pg'
-      path: '/pg'
-      fullPath: '/pg'
-      preLoaderRoute: typeof PgRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reserve': {
@@ -276,8 +276,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   EventsRoute: EventsRoute,
+  HomestayRoute: HomestayRoute,
   HotelsRoute: HotelsRouteWithChildren,
-  PgRoute: PgRoute,
   ReserveRoute: ReserveRoute,
   BookSlugRoute: BookSlugRoute,
 }
