@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Check, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,19 @@ export const Route = createFileRoute("/hotels/$slug")({
 
 function HotelDetails() {
   const { slug } = Route.useParams();
-  const { data: property, isLoading } = useQuery({ queryKey: ["property", slug], queryFn: () => getProperty(slug) });
+  const { data: property, isLoading } = useQuery({
+    queryKey: ["property", slug],
+    queryFn: () => getProperty(slug),
+  });
+  useEffect(() => {
+    if (property && property.slug !== slug) {
+      window.history.replaceState(
+        {},
+        "",
+        `/hotels/${property.slug}`
+      );
+    }
+  }, [property, slug]);
   const { data: rooms = [] } = useQuery({ queryKey: ["rooms", property?.id], queryFn: () => getRooms(property?.id ?? ""), enabled: Boolean(property?.id) });
   const { data: restaurants = [] } = useQuery({ queryKey: ["restaurants", property?.id], queryFn: () => getRestaurants(property?.id ?? ""), enabled: Boolean(property?.id) });
   const { data: reviews = [] } = useQuery({ queryKey: ["reviews", property?.id], queryFn: () => getReviews(property?.id ?? ""), enabled: Boolean(property?.id) });

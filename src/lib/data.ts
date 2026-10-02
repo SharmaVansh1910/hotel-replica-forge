@@ -25,8 +25,33 @@ export async function getProperties() {
 }
 
 export async function getProperty(slug: string) {
-  const { data, error } = await supabase.from("properties").select("*").eq("slug", slug).maybeSingle();
+  const legacySlugMap: Record<string, string> = {
+    "pacific-inn-vistaar-paturi-chamba": "chamba-stay-1",
+    "hotel-near-huda-city-central-gurgaon": "gurugram-stay-1",
+    "madhuban-farm-by-qcent-club": "gurugram-stay-2",
+    "masaga-by-qcent-gurugram": "gurugram-stay-3",
+    "hotel-sakura-by-qcent-sec-45": "gurugram-stay-4",
+    "qcent-jaipur-coming-soon": "jaipur-stay-1",
+    "pacific-inn-devsthali-kedarnath": "kedarnath-stay-1",
+    "the-aarambh-qcent-club-mukteshwar": "mukteshwar-stay-1",
+    "pacific-inn-grand-vista-mussoorie": "mussoorie-stay-1",
+    "pacific-inn-360-degree-resort-rishikesh": "rishikesh-stay-1",
+    "ksr-by-pacific-inn-rishikesh": "rishikesh-stay-2",
+    "qcent-bairagarh-resort-rishikesh": "rishikesh-stay-3",
+    "qcent-woods-resort-spa-rishikesh": "rishikesh-stay-4",
+    "koti-resort-shimla": "shimla-stay-1",
+  };
+
+  const resolvedSlug = legacySlugMap[slug] ?? slug;
+
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("slug", resolvedSlug)
+    .maybeSingle();
+
   if (error) throw error;
+
   return data;
 }
 
