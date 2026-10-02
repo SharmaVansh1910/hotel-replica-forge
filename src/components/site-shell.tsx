@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, Menu, X, ArrowUpRight, Instagram, Phone, UserRound } from "lucide-react";
+import { ChevronDown, Menu, X, ArrowUpRight, Instagram, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProperties, type Property } from "@/lib/data";
 import { useQuery } from "@tanstack/react-query";
@@ -118,9 +118,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <a href="tel:+919818041059" aria-label="Call Pride Vacations" className="grid h-10 w-10 place-items-center rounded-full border border-border hover:bg-secondary">
+            {/* <a href="tel:+919818041059" aria-label="Call Pride Vacations" className="grid h-10 w-10 place-items-center rounded-full border border-border hover:bg-secondary">
               <Phone className="h-4 w-4" />
-            </a>
+            </a> */}
             <Button asChild variant="ghost" size="sm">
               <Link to={signedIn ? "/dashboard" : "/auth"}>
                 <UserRound /> {signedIn ? "My stays" : "Sign in"}
@@ -175,7 +175,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">Stay in touch</p>
             <p className="text-sm leading-6 text-primary-foreground/75">
               <a href="mailto:prideshotels@gmail.com">prideshotels@gmail.com</a><br />
-              <a href="tel:+919818041059">+91 98180 41059</a>
+              {/* <a href="tel:+919818041059">+91 98180 41059</a> */}
             </p>
             <div className="mt-5 flex gap-3">
               <a href="https://instagram.com" aria-label="Instagram" className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/20">
