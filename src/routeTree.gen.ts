@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as FarmhousesRouteImport } from './routes/farmhouses'
 import { Route as HomestayRouteImport } from './routes/homestay'
 import { Route as HotelsRouteImport } from './routes/hotels'
 import { Route as ReserveRouteImport } from './routes/reserve'
@@ -30,6 +32,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -43,6 +50,11 @@ const ContactRoute = ContactRouteImport.update({
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmhousesRoute = FarmhousesRouteImport.update({
+  id: '/farmhouses',
+  path: '/farmhouses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomestayRoute = HomestayRouteImport.update({
@@ -78,9 +90,11 @@ const HotelsSlugRoute = HotelsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
+  '/farmhouses': typeof FarmhousesRoute
   '/homestay': typeof HomestayRoute
   '/hotels': typeof HotelsRouteWithChildren
   '/reserve': typeof ReserveRoute
@@ -90,9 +104,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
+  '/farmhouses': typeof FarmhousesRoute
   '/homestay': typeof HomestayRoute
   '/hotels': typeof HotelsRouteWithChildren
   '/reserve': typeof ReserveRoute
@@ -104,9 +120,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
+  '/farmhouses': typeof FarmhousesRoute
   '/homestay': typeof HomestayRoute
   '/hotels': typeof HotelsRouteWithChildren
   '/reserve': typeof ReserveRoute
@@ -118,9 +136,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/auth'
     | '/contact'
     | '/events'
+    | '/farmhouses'
     | '/homestay'
     | '/hotels'
     | '/reserve'
@@ -130,9 +150,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/auth'
     | '/contact'
     | '/events'
+    | '/farmhouses'
     | '/homestay'
     | '/hotels'
     | '/reserve'
@@ -143,9 +165,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/admin'
     | '/auth'
     | '/contact'
     | '/events'
+    | '/farmhouses'
     | '/homestay'
     | '/hotels'
     | '/reserve'
@@ -157,9 +181,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   EventsRoute: typeof EventsRoute
+  FarmhousesRoute: typeof FarmhousesRoute
   HomestayRoute: typeof HomestayRoute
   HotelsRoute: typeof HotelsRouteWithChildren
   ReserveRoute: typeof ReserveRoute
@@ -182,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -201,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/farmhouses': {
+      id: '/farmhouses'
+      path: '/farmhouses'
+      fullPath: '/farmhouses'
+      preLoaderRoute: typeof FarmhousesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/homestay': {
@@ -273,9 +313,11 @@ const HotelsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   EventsRoute: EventsRoute,
+  FarmhousesRoute: FarmhousesRoute,
   HomestayRoute: HomestayRoute,
   HotelsRoute: HotelsRouteWithChildren,
   ReserveRoute: ReserveRoute,
